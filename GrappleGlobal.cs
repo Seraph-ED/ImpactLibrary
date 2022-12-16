@@ -27,18 +27,14 @@ namespace CollisionLib
 
         public override bool PreAI(Projectile projectile)
         {
-            
-			if(projectile.aiStyle == 7)
-            {
+
+			if (projectile.aiStyle == 7)
+			{
 				AI_007_GrapplingHooks_Altered(projectile);
 
 				return false;
 
-                
-
-
-            }
-
+			}
 
             return base.PreAI(projectile);
 
