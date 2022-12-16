@@ -1,0 +1,8 @@
+A library mod which adds collision surfaces, allowing one to make custom movable and rotatable platforms and walls which collide with the player independantly from tiles.
+
+ Collision Surfaces are orientable "wall" objects which have their positions determined by two end points. 
+ To use collision surfaces, they must be defined and updated from another class which is updated ingame, such as an NPC or Projectile.
+
+ This mod can be used either as a StrongReference dependency or incorporated into the mod's source code directly. If you plan on taking the direct implementation appoach, I (Seraph) the mod author must be credited somewhere.
+
+ You can find further instructions on the implementation of collision surfaces on the forum page, or by extracting the mod, which contains an example cube platform NPC.

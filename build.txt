@@ -1,0 +1,3 @@
+displayName = Impact Library
+author = Seraph
+version = 2.2
