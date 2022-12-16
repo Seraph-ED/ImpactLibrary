@@ -15,7 +15,8 @@ namespace CollisionLib14.Utilities
 
 			cursor.Emit(OpCodes.Nop);
 
-			foreach (var incomingLabel in incomingLabels) {
+			foreach (var incomingLabel in incomingLabels)
+			{
 				incomingLabel.Target = cursor.Prev;
 			}
 

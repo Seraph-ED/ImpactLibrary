@@ -26,7 +26,8 @@ namespace CollisionLib
 
 		private static void GrapplingHookAIInjection(ILContext context)
 		{
-			var il = new ILCursor(context) {
+			var il = new ILCursor(context)
+			{
 				// Start from the bottom.
 				Index = context.Instrs.Count - 1
 			};
@@ -61,11 +62,13 @@ namespace CollisionLib
 
 		private static void ModifyFlag(Projectile projectile, ref bool flag)
 		{
-			if (!projectile.TryGetGlobalProjectile(out GrappleGlobal grappleData)) {
+			if (!projectile.TryGetGlobalProjectile(out GrappleGlobal grappleData))
+			{
 				return;
 			}
 
-			if (grappleData.GrappledToCollsionSurface && projectile.timeLeft < 36000 - 3) {
+			if (grappleData.GrappledToCollsionSurface && projectile.timeLeft < 36000 - 3)
+			{
 				//projectile.position;
 				flag = false;
 			}
