@@ -16,7 +16,7 @@ using Ionic.Zip;
 
 namespace CollisionLib
 {
-    class PhysicsPlayer : ModPlayer
+    internal sealed class PhysicsPlayer : ModPlayer
     {
 
         public bool collisionBottom = false;
