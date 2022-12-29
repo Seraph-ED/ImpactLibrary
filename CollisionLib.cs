@@ -31,12 +31,11 @@ namespace CollisionLib
             On.Terraria.Player.Update_NPCCollision += CollisionDetour;
         }
 
-        private void CollisionDetour(On.Terraria.Player.orig_Update_NPCCollision orig, Terraria.Player self)
+        private void CollisionDetour(On.Terraria.Player.orig_Update_NPCCollision orig, Player self)
         {
-
             PhysicsPlayer physics = self.GetModPlayer<PhysicsPlayer>();
 
-            if (self.GetModPlayer<PhysicsPlayer>().collisionPointBottom != Vector2.Zero && !self.GetModPlayer<PhysicsPlayer>().canDropThrough)
+			if (physics.collisionPointBottom != Vector2.Zero && !physics.canDropThrough)
             {
                 if (!self.justJumped && self.velocity.Y > 0)
                 {
@@ -46,7 +45,7 @@ namespace CollisionLib
                     self.fallStart = (int)(self.position.Y / 16f);
                     if (!self.controlJump)
                     {
-                        self.position.Y = self.GetModPlayer<PhysicsPlayer>().collisionPointBottom.Y - self.height - 2;
+                        self.position.Y = physics.collisionPointBottom.Y - self.height - 2;
                     }
                     
                     //self.position.Y = npc.position.Y - self.height + 4;
@@ -55,42 +54,42 @@ namespace CollisionLib
 
             }
 
-            if (self.GetModPlayer<PhysicsPlayer>().collisionPointTop != Vector2.Zero)
+            if (physics.collisionPointTop != Vector2.Zero)
             {
                 if (self.velocity.Y < 0)
                 {
                     //self.gfxOffY = npc.gfxOffY;
                     self.velocity.Y = 0;
                     self.fallStart = (int)(self.position.Y / 16f);
-                    self.position.Y = self.GetModPlayer<PhysicsPlayer>().collisionPointTop.Y + 4;
+                    self.position.Y = physics.collisionPointTop.Y + 4;
                     //self.position.Y = npc.position.Y - self.height + 4;
                     // orig(self);
                 }
 
             }
 
-            if (self.GetModPlayer<PhysicsPlayer>().collisionPointLeft != Vector2.Zero)
+            if (physics.collisionPointLeft != Vector2.Zero)
             {
                 if (self.velocity.X <= 0)
                 {
                     //self.gfxOffY = npc.gfxOffY;
                     self.velocity.X = 0;
                     //self.fallStart = (int)(self.position.Y / 16f);
-                    self.position.X = self.GetModPlayer<PhysicsPlayer>().collisionPointLeft.X + 4;
+                    self.position.X = physics.collisionPointLeft.X + 4;
                     //self.position.Y = npc.position.Y - self.height + 4; - self.width -
                     // orig(self);
                 }
 
             }
 
-            if (self.GetModPlayer<PhysicsPlayer>().collisionPointRight != Vector2.Zero)
+            if (physics.collisionPointRight != Vector2.Zero)
             {
                 if (self.velocity.X >= 0)
                 {
                     //self.gfxOffY = npc.gfxOffY;
                     self.velocity.X = 0;
                     //self.fallStart = (int)(self.position.Y / 16f);
-                    self.position.X = self.GetModPlayer<PhysicsPlayer>().collisionPointRight.X - self.width - 3;
+                    self.position.X = physics.collisionPointRight.X - self.width - 3;
                     //self.position.Y = npc.position.Y - self.height + 4; - self.width -
                     // orig(self);
                 }
@@ -98,17 +97,17 @@ namespace CollisionLib
             }
 
 
-            if (self.controlDown) self.GetModPlayer<PhysicsPlayer>().PlatformCounter = 5;
-            if (self.controlDown || self.GetModPlayer<PhysicsPlayer>().PlatformCounter > 0 || self.GoingDownWithGrapple) { orig(self); return; }
+            if (self.controlDown) physics.PlatformCounter = 5;
+            if (self.controlDown || physics.PlatformCounter > 0 || self.GoingDownWithGrapple) { orig(self); return; }
 
-            if (self.GetModPlayer<PhysicsPlayer>().collisionPointBottom != Vector2.Zero && self.GetModPlayer<PhysicsPlayer>().canDropThrough)
+            if (physics.collisionPointBottom != Vector2.Zero && physics.canDropThrough)
             {
                 if (!self.justJumped && self.velocity.Y >= 0)
                 {
                     //self.gfxOffY = npc.gfxOffY;
                     self.velocity.Y = 0;
                     self.fallStart = (int)(self.position.Y / 16f);
-                    self.position.Y = self.GetModPlayer<PhysicsPlayer>().collisionPointBottom.Y - self.height - 2;
+                    self.position.Y = physics.collisionPointBottom.Y - self.height - 2;
                     //self.position.Y = npc.position.Y - self.height + 4;
                     // orig(self);
                 }

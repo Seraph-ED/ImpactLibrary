@@ -160,21 +160,28 @@ namespace CollisionLib
         {
             for(int i = 0; i < Main.maxProjectiles; ++i)
             {
-                if (Main.projectile[i].aiStyle != 7 || !Main.projectile[i].active || Main.projectile[i].ai[0] == 1 || Main.projectile[i].timeLeft >= 35997)
+                Projectile proj = Main.projectile[i];
+
+                if (proj.aiStyle != 7 || !proj.active || proj.ai[0] == 1 || proj.timeLeft >= 35997)
                 {
                     continue;
                 }
-                Projectile proj = Main.projectile[i];
+
+                if (!proj.TryGetGlobalProjectile(out GrappleGlobal grappleGlobal))
+                {
+                    continue;
+                }
+
                 //Collision.canth
-                if(Collision.CheckAABBvLineCollision(proj.position, proj.Size, endPoints[0], endPoints[1])|| Collision.CheckAABBvLineCollision(proj.GetGlobalProjectile<GrappleGlobal>().CollisionSurfaceGrapplePoint, proj.Size, endPoints[0], endPoints[1]))
+                if(Collision.CheckAABBvLineCollision(proj.position, proj.Size, endPoints[0], endPoints[1])|| Collision.CheckAABBvLineCollision(grappleGlobal.CollisionSurfaceGrapplePoint, proj.Size, endPoints[0], endPoints[1]))
                 {
 
-                    if (proj.GetGlobalProjectile<GrappleGlobal>().GrappledSurface == null)
+                    if (grappleGlobal.GrappledSurface == null)
                     {
-                        proj.GetGlobalProjectile<GrappleGlobal>().GrappledSurface = new Ref<CollisionSurface>(this);
+                        grappleGlobal.GrappledSurface = new Ref<CollisionSurface>(this);
 
                     }
-                    else if (proj.GetGlobalProjectile<GrappleGlobal>().GrappledSurface.Value != this)
+                    else if (grappleGlobal.GrappledSurface.Value != this)
                     {
                         continue;
                     }
@@ -185,61 +192,61 @@ namespace CollisionLib
                     
                     proj.netUpdate = true;
                     Main.player[proj.owner].wingTime = Main.player[proj.owner].wingTimeMax;
-                    proj.GetGlobalProjectile<GrappleGlobal>().GrappledToCollsionSurface = true;
+                    grappleGlobal.GrappledToCollsionSurface = true;
 
 
 
 
                    
-                    if (proj.GetGlobalProjectile<GrappleGlobal>().CollisionSurfaceGrapplePoint == Vector2.Zero)
+                    if (grappleGlobal.CollisionSurfaceGrapplePoint == Vector2.Zero)
                     {
                         
                         
                         
                         
-                        proj.GetGlobalProjectile<GrappleGlobal>().CollisionSurfaceGrapplePoint = proj.Center;
+                        grappleGlobal.CollisionSurfaceGrapplePoint = proj.Center;
 
                         Vector2 p1 = LineIntersection(endPoints[0], endPoints[1], proj.position, proj.position + proj.Size);
 
                         if (p1 == Vector2.Zero)
                         {
-                            //proj.GetGlobalProjectile<GrappleGlobal>().CollisionSurfaceGrapplePoint = LineIntersection(endPoints[0], endPoints[1], proj.position + new Vector2(proj.width, 0), proj.position + new Vector2(0, proj.height));
-                            proj.GetGlobalProjectile<GrappleGlobal>().CollisionSurfaceGrappleDistance = GetLineIntersectionLerp(endPoints[0], endPoints[1], proj.position + new Vector2(proj.width, 0), proj.position + new Vector2(0, proj.height));
+                            //grappleGlobal.CollisionSurfaceGrapplePoint = LineIntersection(endPoints[0], endPoints[1], proj.position + new Vector2(proj.width, 0), proj.position + new Vector2(0, proj.height));
+                            grappleGlobal.CollisionSurfaceGrappleDistance = GetLineIntersectionLerp(endPoints[0], endPoints[1], proj.position + new Vector2(proj.width, 0), proj.position + new Vector2(0, proj.height));
                         }
                         else
                         {
-                            //proj.GetGlobalProjectile<GrappleGlobal>().CollisionSurfaceGrapplePoint = p1;
-                            proj.GetGlobalProjectile<GrappleGlobal>().CollisionSurfaceGrappleDistance = GetLineIntersectionLerp(endPoints[0], endPoints[1], proj.position, proj.position + proj.Size);
+                            //grappleGlobal.CollisionSurfaceGrapplePoint = p1;
+                            grappleGlobal.CollisionSurfaceGrappleDistance = GetLineIntersectionLerp(endPoints[0], endPoints[1], proj.position, proj.position + proj.Size);
                         }
 
-                        if(proj.GetGlobalProjectile<GrappleGlobal>().CollisionSurfaceGrappleDistance > 0.95f)
+                        if(grappleGlobal.CollisionSurfaceGrappleDistance > 0.95f)
                         {
-                            proj.GetGlobalProjectile<GrappleGlobal>().CollisionSurfaceGrappleDistance = 0.95f;
+                            grappleGlobal.CollisionSurfaceGrappleDistance = 0.95f;
                         }
-                        else if(proj.GetGlobalProjectile<GrappleGlobal>().CollisionSurfaceGrappleDistance < 0.05f)
+                        else if(grappleGlobal.CollisionSurfaceGrappleDistance < 0.05f)
                         {
-                            proj.GetGlobalProjectile<GrappleGlobal>().CollisionSurfaceGrappleDistance = 0.05f;
+                            grappleGlobal.CollisionSurfaceGrappleDistance = 0.05f;
                         }
 
-                        proj.GetGlobalProjectile<GrappleGlobal>().CollisionSurfaceGrapplePoint = Vector2.Lerp(endPoints[0], endPoints[1], proj.GetGlobalProjectile<GrappleGlobal>().CollisionSurfaceGrappleDistance);
+                        grappleGlobal.CollisionSurfaceGrapplePoint = Vector2.Lerp(endPoints[0], endPoints[1], grappleGlobal.CollisionSurfaceGrappleDistance);
 
                         if (Math.Abs(proj.AngleTo(Main.player[proj.owner].Center)- (GetPlanarAngle(-1)%MathHelper.TwoPi)) <= Math.Abs(proj.AngleTo(Main.player[proj.owner].Center) - (GetPlanarAngle(1) % MathHelper.TwoPi)))
                         {
-                            proj.GetGlobalProjectile<GrappleGlobal>().CollisionSufraceGrappleSide = -1;
+                            grappleGlobal.CollisionSufraceGrappleSide = -1;
                         }
                         else
                         {
-                            proj.GetGlobalProjectile<GrappleGlobal>().CollisionSufraceGrappleSide = 1;
+                            grappleGlobal.CollisionSufraceGrappleSide = 1;
                         }
 
-                        proj.GetGlobalProjectile<GrappleGlobal>().CollisionSufraceGrappleAngle = GetPlanarAngle(proj.GetGlobalProjectile<GrappleGlobal>().CollisionSufraceGrappleSide);
+                        grappleGlobal.CollisionSufraceGrappleAngle = GetPlanarAngle(grappleGlobal.CollisionSufraceGrappleSide);
                     }
                     else
                     {
-                        proj.GetGlobalProjectile<GrappleGlobal>().CollisionSurfaceGrapplePoint = Vector2.Lerp(endPoints[0], endPoints[1], proj.GetGlobalProjectile<GrappleGlobal>().CollisionSurfaceGrappleDistance);
-                        proj.GetGlobalProjectile<GrappleGlobal>().CollisionSufraceGrappleAngle = GetPlanarAngle(proj.GetGlobalProjectile<GrappleGlobal>().CollisionSufraceGrappleSide);
-                        //proj.GetGlobalProjectile<GrappleGlobal>().CollisionSurfaceGrapplePoint += Vector2.Lerp(velocities[0], velocities[1], proj.GetGlobalProjectile<GrappleGlobal>().CollisionSurfaceGrappleDistance);
-                        proj.Center = proj.GetGlobalProjectile<GrappleGlobal>().CollisionSurfaceGrapplePoint + Vector2.UnitX.RotatedBy(proj.GetGlobalProjectile<GrappleGlobal>().CollisionSufraceGrappleAngle) * 8;
+                        grappleGlobal.CollisionSurfaceGrapplePoint = Vector2.Lerp(endPoints[0], endPoints[1], grappleGlobal.CollisionSurfaceGrappleDistance);
+                        grappleGlobal.CollisionSufraceGrappleAngle = GetPlanarAngle(grappleGlobal.CollisionSufraceGrappleSide);
+                        //grappleGlobal.CollisionSurfaceGrapplePoint += Vector2.Lerp(velocities[0], velocities[1], grappleGlobal.CollisionSurfaceGrappleDistance);
+                        proj.Center = grappleGlobal.CollisionSurfaceGrapplePoint + Vector2.UnitX.RotatedBy(grappleGlobal.CollisionSufraceGrappleAngle) * 8;
                     }
 
 
@@ -269,7 +276,10 @@ namespace CollisionLib
                     continue;
                 }
 
-                PhysicsPlayer modPlayer = player.GetModPlayer<PhysicsPlayer>();
+                if (!player.TryGetModPlayer<PhysicsPlayer>(out var modPlayer))
+                {
+					continue;
+				}
 
                 currentlyColliding = false;
 
